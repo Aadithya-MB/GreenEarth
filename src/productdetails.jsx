@@ -1,102 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./ProductDetails.css";
+
 const ProductDetails = ({ addToCart }) => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [addToCartStatus, setAddToCartStatus] = useState("idle");
-
   useEffect(() => {
-    const products = [
-      {
-        id: 1,
-        name: "Product 1",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/1/200",
-        review: "Worth for money, Amazing Product",
-      },
-      {
-        id: 2,
-        name: "Product 2",
-        price: 19.99,
-        weight: "500g",
-        description:
-          "Praesent volutpat massa nec risus pulvinar, ac maximus justo elementum.",
-        image: "https://picsum.photos/id/2/200",
-        review: null,
-      },
-      {
-        id: 3,
-        name: "Product 3",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/3/200",
-        review: null,
-      },
-      {
-        id: 4,
-        name: "Product 4",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/4/200",
-        review: null,
-      },
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products").then(
+          (res) => res.json()
+        );
 
-      {
-        id: 5,
-        name: "Product 5",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/5/200",
-        review: null,
-      },
-      {
-        id: 6,
-        name: "Product 6",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/6/200",
-        review: null,
-      },
-      {
-        id: 7,
-        name: "Product 7",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/7/200",
-        review: null,
-      },
-      {
-        id: 8,
-        name: "Product 8",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/8/200",
-        review: null,
-      },
-      {
-        id: 9,
-        name: "Product 9",
-        price: 10.99,
-        weight: "250g",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://picsum.photos/id/9/200",
-        review: null,
-      },
-    ];
+        // Transform the data and set the state
+        const transformedData = response.map((item) => ({
+          id: item.id,
+          name: item.title,
+          price: item.price,
+          image: item.image,
+          rating: item.rating["rate"],
+          desc: item.description,
+        }));
 
-    const productData = products.find((p) => p.id === parseInt(id, 10));
-    setProduct(productData);
-  }, [id]);
+        const productData = transformedData.find(
+          (p) => p.id === parseInt(id, 10)
+        );
+        setProduct(productData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]); // Add 'id' as a dependency to re-run the effect when 'id' changes
 
   if (!product) {
     return <div>Loading...</div>;
@@ -124,9 +62,13 @@ const ProductDetails = ({ addToCart }) => {
     <div className="product-details-container fade-in">
       <h2>{product.name}</h2>
       <img src={product.image} alt={product.name} />
-      <p>Description: {product.description}</p>
-      <p>Weight: {product.weight}</p>
-      <p>Review: {product.review ? product.review : "Not Available"}</p>
+      <p>
+        <b>Description:</b> {product.desc}
+      </p>
+      {/* <p>Weight: {product.weight}</p> */}
+      <p>
+        <b>Review</b> {product.review ? product.review : "Not Available"}
+      </p>
 
       <div className="quantity-container">
         <label htmlFor="quantity">Quantity:</label>

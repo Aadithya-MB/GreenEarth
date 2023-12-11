@@ -8,9 +8,9 @@ const Cart = ({ cart, removeFromCart }) => {
 
   return (
     <div className="cart-container">
-      <h2>Cart</h2>
+      <h1 className="cart-head">Cart</h1>
       {cart.length === 0 ? (
-        <p>Your cart is empty</p>
+        <h2>Your cart is empty</h2>
       ) : (
         <div className="cart-items">
           {cart.map((item) => (
@@ -18,10 +18,10 @@ const Cart = ({ cart, removeFromCart }) => {
               <div className="item-details">
                 <img src={item.image} alt={item.name} className="item-image" />
                 <div className="item-info">
-                  <h3>{item.name}</h3>
-                  <p>Price: ${item.price}</p>
-                  <p>Weight: {item.weight}</p>
-                  <p>Review:</p>
+                  <h5>{item.name}</h5>
+                  <p>
+                    <b>Price: ${item.price}</b>
+                  </p>
                 </div>
               </div>
               <button
